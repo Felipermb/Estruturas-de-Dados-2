@@ -1,2 +1,3 @@
-# Estruturas-de-Dados-2
-AED2
+# Aula Estrutura de Dados 2
+
+Felipe Reis.
