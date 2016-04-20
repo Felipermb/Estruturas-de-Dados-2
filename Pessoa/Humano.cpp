@@ -9,14 +9,11 @@ int main(){
   string nome;
 
   int i = 0;
-  for(i=0; i<8; i++){
-      cout << "Insira o Nome: " << endl;
-      cin >> nome;
-
+  for(i=0; i<6; i++){
       cout << "Insira a Idade:" << endl;
       cin >> idade;
 
-      novo = new Pessoa(nome,idade);
+      novo = new Pessoa("nome",idade);
 
       if(raiz == NULL){
         raiz = novo;

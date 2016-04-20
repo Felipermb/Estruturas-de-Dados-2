@@ -12,7 +12,6 @@ class Pessoa{
 
   public:
     Pessoa(){
-
     }
 
     Pessoa(string nm, int id){
@@ -127,58 +126,65 @@ class Pessoa{
       }
     }
 
+    void removeNoFolha(Pessoa *apagar){
+      if(apagar->pai->direita == apagar){
+          apagar->pai->direita = NULL;
+          delete apagar;
+      }else{
+        apagar->pai->esquerda = NULL;
+        delete apagar;
+      }
+    }
+
+    void removerUmFilhos(Pessoa *apagar){
+      if(apagar->esquerda == NULL){
+        apagar->direita->pai = apagar->pai;
+        if(apagar->pai->direita == apagar){
+            apagar->pai->direita = apagar->direita;
+        }else{
+          apagar->pai->esquerda = apagar->direita;
+        }
+        delete apagar;
+      }else{
+        apagar->esquerda->pai = apagar->pai;
+        if(apagar->pai->esquerda == apagar){
+            apagar->pai->esquerda = apagar->esquerda;
+        }else{
+          apagar->pai->direita = apagar->esquerda;
+        }
+        delete apagar;
+      }
+    }
+
+    void removeDoisFilhos(Pessoa *apagar){
+      cout << "entrou 2 filhos" << endl;
+        Pessoa *caminhar = apagar->direita;
+        while(caminhar->esquerda != NULL){
+          caminhar = caminhar->esquerda;
+        }
+        caminhar->pai->esquerda = caminhar->direita;
+        if(caminhar->direita != NULL){
+          caminhar->direita->pai = caminhar->pai;
+        }
+        caminhar->direita = apagar->direita;
+        caminhar->esquerda = apagar->esquerda;
+        caminhar->pai = apagar->pai;
+        if(apagar->pai->direita == apagar){
+          apagar->pai->direita = caminhar;
+        }else{
+          apagar->pai->esquerda = caminhar;
+        }
+        delete apagar;
+      }
+
     void limpaEspecifica(Pessoa *apagar){
       if(apagar->direita == NULL && apagar->esquerda == NULL){
-          if(apagar->pai->direita == apagar){
-              apagar->pai->direita = NULL;
-              delete apagar;
-          }else{
-            apagar->pai->esquerda = NULL;
-            delete apagar;
-          }
+         this->removeNoFolha(apagar);
       }else{
         if(apagar->esquerda == NULL || apagar->direita == NULL){
-          if(apagar->esquerda == NULL){
-            apagar->direita->pai->pai->direita = apagar->direita;
-            delete apagar;
-          }else{
-            apagar->esquerda->pai->pai->esquerda = apagar->esquerda;
-            delete apagar;
-          }
+          this->removerUmFilhos(apagar);
         }else{
-          if(apagar->direita->esquerda == NULL){
-            apagar->direita->pai = apagar->pai;
-            apagar->direita->esquerda = apagar->esquerda;
-            if(apagar->pai->esquerda == apagar){
-                apagar->pai->esquerda = apagar->direita;
-            }else{
-              apagar->pai->direita = apagar->direita;
-            }
-            delete apagar;
-          }else{
-            Pessoa *caminhar = apagar->direita;
-            while(caminhar->esquerda != NULL){
-              caminhar = caminhar->esquerda;
-            }
-            if(caminhar->direita == NULL){
-              caminhar->pai->esquerda = NULL;
-              caminhar->pai = apagar->pai;
-              caminhar->esquerda = apagar->esquerda;
-              apagar->esquerda->pai = caminhar;
-              caminhar->direita = apagar->direita;
-              apagar->direita->pai = caminhar;
-              delete apagar;
-
-            }else{
-              // caminhar->direita->pai = caminhar->pai;
-              // caminhar->pai->esquerda = caminhar->direita;
-              // caminhar->esquerda = apagar->esquerda;
-              // apagar->esquerda->pai = caminhar;
-              // caminhar->direita = apagar->direita;
-              // apagar->direita->pai = caminhar;
-              // delete apagar;
-            }
-          }
+            this->removeDoisFilhos(apagar);
         }
       }
     }
