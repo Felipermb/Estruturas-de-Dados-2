@@ -9,7 +9,7 @@ int main(){
   string nome;
 
   int i = 0;
-  for(i=0; i<6; i++){
+  for(i=0; i<3; i++){
       cout << "Insira a Idade:" << endl;
       cin >> idade;
 
@@ -29,21 +29,19 @@ int main(){
   cout << "Inisira a idade a apagar" << endl;
   cin >> idade;
 
-  /*Pessoa *retorno = raiz->buscar(idade);
-
-  if(retorno == NULL){
-    cout << "Não encontrado" << endl;
-  }else{
-    cout << retorno->getNome() <<"--"<< retorno->getIdade() << endl;
-  }*/
-
   Pessoa *apagar = raiz->buscar(idade);
-
-  raiz->limpaEspecifica(apagar);
+  if(apagar == NULL){
+    std::cout << "Não encontrado" << std::endl;
+  }else{
+    raiz->limpaEspecifica(apagar, &raiz);
+  }
 
   cout << endl;
-  raiz->mostrarPreOrdem();
+  if(raiz != NULL)
+    raiz->mostrarPreOrdem();
 
-  raiz->limpaMemoria();
+
+  if(raiz != NULL)
+    raiz->limpaMemoria();
   return 0;
 }

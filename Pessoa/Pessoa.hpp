@@ -72,30 +72,30 @@ class Pessoa{
     }
 
     void mostrarPreOrdem(){
-      cout << "Idade: " << this->getIdade() << endl;
-      if(this->esquerda != NULL)
+        cout << "Idade: " << this->getIdade() << endl;
+        if(this->esquerda != NULL)
         this->esquerda->mostrarPreOrdem();
 
-      if(this->direita != NULL)
+        if(this->direita != NULL)
         this->direita->mostrarPreOrdem();
     }
     void mostrarOrdem(){
-      if(this->esquerda != NULL)
+        if(this->esquerda != NULL)
         this->esquerda->mostrarOrdem();
 
-      cout << "Idade: " << this->getIdade() << endl;
+        cout << "Idade: " << this->getIdade() << endl;
 
-      if(this->direita != NULL)
+        if(this->direita != NULL)
         this->direita->mostrarOrdem();
     }
     void mostrarPosOrdem(){
-      if(this->esquerda != NULL)
+        if(this->esquerda != NULL)
         this->esquerda->mostrarPosOrdem();
 
-      if(this->direita != NULL)
+        if(this->direita != NULL)
         this->direita->mostrarPosOrdem();
 
-      cout << "Idade: " << this->getIdade() << endl;
+        cout << "Idade: " << this->getIdade() << endl;
     }
 
     void limpaMemoria(){
@@ -126,37 +126,51 @@ class Pessoa{
       }
     }
 
-    void removeNoFolha(Pessoa *apagar){
-      if(apagar->pai->direita == apagar){
+    void removeNoFolha(Pessoa *apagar, Pessoa **raiz){
+      if(apagar == (*raiz)){
+        delete apagar;
+        (*raiz) = NULL;
+      }else{
+        if(apagar->pai->direita == apagar){
           apagar->pai->direita = NULL;
           delete apagar;
-      }else{
-        apagar->pai->esquerda = NULL;
-        delete apagar;
+        }else{
+          apagar->pai->esquerda = NULL;
+          delete apagar;
+        }
       }
     }
 
-    void removerUmFilhos(Pessoa *apagar){
-      if(apagar->esquerda == NULL){
-        apagar->direita->pai = apagar->pai;
-        if(apagar->pai->direita == apagar){
+    void removerUmFilhos(Pessoa *apagar, Pessoa **raiz){
+      if(apagar == (*raiz)){
+        if(apagar->direita == NULL){
+          (*raiz) = apagar->esquerda;
+        }else{
+          (*raiz) = apagar->direita;
+        }
+        delete apagar;
+      }else{
+        if(apagar->esquerda == NULL){
+          apagar->direita->pai = apagar->pai;
+          if(apagar->pai->direita == apagar){
             apagar->pai->direita = apagar->direita;
+          }else{
+            apagar->pai->esquerda = apagar->direita;
+          }
+          delete apagar;
         }else{
-          apagar->pai->esquerda = apagar->direita;
-        }
-        delete apagar;
-      }else{
-        apagar->esquerda->pai = apagar->pai;
-        if(apagar->pai->esquerda == apagar){
+          apagar->esquerda->pai = apagar->pai;
+          if(apagar->pai->esquerda == apagar){
             apagar->pai->esquerda = apagar->esquerda;
-        }else{
-          apagar->pai->direita = apagar->esquerda;
+          }else{
+            apagar->pai->direita = apagar->esquerda;
+          }
+          delete apagar;
         }
-        delete apagar;
       }
     }
 
-    void removeDoisFilhos(Pessoa *apagar){
+    void removeDoisFilhos(Pessoa *apagar, Pessoa **raiz){
       cout << "entrou 2 filhos" << endl;
         Pessoa *caminhar = apagar->direita;
         while(caminhar->esquerda != NULL){
@@ -177,14 +191,14 @@ class Pessoa{
         delete apagar;
       }
 
-    void limpaEspecifica(Pessoa *apagar){
+    void limpaEspecifica(Pessoa *apagar, Pessoa **raiz){
       if(apagar->direita == NULL && apagar->esquerda == NULL){
-         this->removeNoFolha(apagar);
+         this->removeNoFolha(apagar,raiz);
       }else{
         if(apagar->esquerda == NULL || apagar->direita == NULL){
-          this->removerUmFilhos(apagar);
+          this->removerUmFilhos(apagar,raiz);
         }else{
-            this->removeDoisFilhos(apagar);
+            this->removeDoisFilhos(apagar,raiz);
         }
       }
     }
