@@ -11,8 +11,8 @@ class Pessoa{
     Pessoa* filhoEsquerda;
     Pessoa* filhoDireita;
     Pessoa* papai;
-    int contEsq;
-    int contDir;
+    int esquerda;
+    int direita;
 
   public:
 
@@ -22,8 +22,8 @@ class Pessoa{
       filhoDireita = NULL;
       filhoEsquerda = NULL;
       papai = NULL;
-      contDir = 0;
-      contEsq = 0;
+      esquerda = 0;
+      direita = 0;
 
     };
 
@@ -33,8 +33,6 @@ class Pessoa{
       filhoDireita = NULL;
       filhoEsquerda = NULL;
       papai = NULL;
-      contDir = 0;
-      contEsq = 0;
     };
 
     ~Pessoa(){};
@@ -57,16 +55,8 @@ class Pessoa{
           if(filhoEsquerda == NULL){
               this->filhoEsquerda = nova;
               nova->papai = this;
-              Pessoa *aux = this;
-              this->contEsq++;
-              while(aux->papai != NULL){
-                if(aux == aux->papai->filhoEsquerda){
-                  aux->papai->contEsq++;
-                  aux = aux->papai;
-                }else{
-                  break;
-                }
-              }
+              atualizaValores(nova,true);
+              verifica(nova);
           }else{
               filhoEsquerda->inserirPessoa(nova);
           }
@@ -74,16 +64,8 @@ class Pessoa{
           if(filhoDireita == NULL){
               this->filhoDireita = nova;
               nova->papai = this;
-              Pessoa *aux = this;
-              this->contDir++;
-              while(aux->papai != NULL){
-                if(aux == aux->papai->filhoDireita){
-                  aux->papai->contDir++;
-                  aux = aux->papai;
-                }else{
-                  break;
-                }
-              }
+              atualizaValores(nova,true);
+              verifica(nova);
           }else{
               filhoDireita->inserirPessoa(nova);
           }
@@ -92,55 +74,33 @@ class Pessoa{
     };
 
     void deletarSemFilho(Pessoa* pessoa){
-      //Teste para saber qual lado está a pessoa que será removida
-
-      //cout << endl << pessoa->papai->filhoEsquerda->getNome() << " : " << pessoa->getNome() << endl;
-
       if(pessoa->papai->filhoEsquerda == pessoa){
-         //remove o filho da esquerda
-         cout << endl << "Removendo filho a esquerda" << endl;
          pessoa->papai->filhoEsquerda = NULL;
          delete pessoa;
        }else{
-         //remove o filho da direita
-         cout << endl << "Removendo filho a direita" << endl;
          pessoa->papai->filhoDireita = NULL;
          delete pessoa;
        }
     };
 
     void deletarUmFilho(Pessoa* pessoa){
-
-      //Verificar qual o lado estou
       if(pessoa->papai->filhoEsquerda == pessoa){
-        cout << endl << "Removendo filho a esquerda" << endl;
-        //estou do lado esquerdo
-        //Verificar quem é meu filho (esquedo ou direito)
         if(pessoa->filhoEsquerda != NULL){
-        //filho a esquerda
           pessoa->filhoEsquerda->papai = pessoa->papai;
           pessoa->papai->filhoEsquerda = pessoa->filhoEsquerda;
 
           delete pessoa;
         }else{
-        //filho a direita
           pessoa->filhoDireita->papai = pessoa->papai;
           pessoa->papai->filhoEsquerda = pessoa->filhoDireita;
           delete pessoa;
         }
-
-
       }else{
-        cout << endl << "Removendo filho a direita" << endl;
-        //estou do lado direito
-        //Verificar quem é o meu filho (esquerdo ou direito)
         if(pessoa->filhoEsquerda != NULL){
-          //filho a esquerda
           pessoa->filhoEsquerda->papai = pessoa->papai;
           pessoa->papai->filhoDireita = pessoa->filhoEsquerda;
           delete pessoa;
         }else{
-          // filho a direita
           pessoa->filhoDireita->papai = pessoa->papai;
           pessoa->papai->filhoDireita = pessoa->filhoDireita;
           delete pessoa;
@@ -150,45 +110,28 @@ class Pessoa{
     };
 
     void deletarDoisFilhos(Pessoa* pessoa){
-      //Verificar de qual lado estou
       int binario;
       if(pessoa->papai->filhoEsquerda == pessoa){
-        //estou do lado esquerdo
         binario = 0;
       }else{
-        //estou do lado direito
         binario = 1;
       }
-      //if(pessoa->papai->filhoEsquerda == pessoa){
-        //estou do lado esquerdo
-        //verificar se meu filho a direita tem um filho a esquerda
         if(pessoa->filhoDireita->filhoEsquerda == NULL){
-          //ele não TEM filho a esquerda
-          cout << "Não possui filho a esquerda" << endl;
-
           if(binario == 0){
             pessoa->papai->filhoEsquerda = pessoa->filhoDireita;
           }else{
             pessoa->papai->filhoDireita = pessoa->filhoDireita;
           }
-
           pessoa->filhoDireita->filhoEsquerda = pessoa->filhoEsquerda;
           pessoa->filhoDireita->papai = pessoa->papai;
           pessoa->filhoEsquerda->papai = pessoa->filhoDireita;
           delete pessoa;
-
         }else{
-          //ele TEM filho a esquerda
-          //buscar a ultima folha deste galho a esquerda
-          cout << "Possui filho a esquerda" << endl;
-
           Pessoa* aux = pessoa->filhoDireita;
           while(aux->filhoEsquerda != NULL){
             aux = aux->filhoEsquerda;
           }
-
-           //Verificar se esse cara 'aux' tem um filho a direita
-           if(aux->filhoDireita != NULL){
+          if(aux->filhoDireita != NULL){
               aux->filhoDireita->papai = aux->papai;
            }
            aux->papai->filhoEsquerda = aux->filhoDireita;
@@ -198,54 +141,38 @@ class Pessoa{
           }else{
             pessoa->papai->filhoDireita = aux;
           }
-
           aux->papai = pessoa->papai;
           aux->filhoEsquerda = pessoa->filhoEsquerda;
           aux->filhoDireita = pessoa->filhoDireita;
           aux->filhoEsquerda->papai = aux;
           aux->filhoDireita->papai = aux;
           delete pessoa;
-
         }
     };
 
     void deletarRaizDoisFilhos(Pessoa* pessoa, Pessoa ** raiz){
-      //Verificar de qual lado estou
         if(pessoa->filhoDireita->filhoEsquerda == NULL){
-          //ele não TEM filho a esquerda
-          cout << "Não possui filho a esquerda" << endl;
-
           pessoa->filhoDireita->filhoEsquerda = pessoa->filhoEsquerda;
           pessoa->filhoDireita->papai = NULL;
           (*raiz) = pessoa->filhoDireita;
           pessoa->filhoEsquerda->papai = (*raiz);
           delete pessoa;
-
         }else{
-          //ele TEM filho a esquerda
-          //buscar a ultima folha deste galho a esquerda
-          cout << "Possui filho a esquerda" << endl;
-
           Pessoa* aux = pessoa->filhoDireita;
           while(aux->filhoEsquerda != NULL){
             aux = aux->filhoEsquerda;
           }
-
-           //Verificar se esse cara 'aux' tem um filho a direita
            if(aux->filhoDireita != NULL){
               aux->filhoDireita->papai = aux->papai;
            }
            aux->papai->filhoEsquerda = aux->filhoDireita;
-
           aux->papai = NULL;
-
           aux->filhoEsquerda = pessoa->filhoEsquerda;
           aux->filhoDireita = pessoa->filhoDireita;
           aux->filhoEsquerda->papai = aux;
           aux->filhoDireita->papai = aux;
           (*raiz) = aux;
           delete pessoa;
-
         }
     }
 
@@ -335,7 +262,7 @@ class Pessoa{
     }
 
     void preMostrar(){
-        cout << this->nome << ": " << this->idade << ": " << this->contDir << ": "<< this->contEsq << endl;
+        cout << this->nome << ": " << this->idade << ": " << this->direita << ": "<< this->esquerda  << ": " << this->direita - this->esquerda << endl;
         if(filhoEsquerda != NULL){
           this->filhoEsquerda->preMostrar();
         }
@@ -368,74 +295,79 @@ class Pessoa{
 
       cout << this->nome << ":" << this->idade << endl;
     }
-};
 
-int main(int argc, char const *argv[]) {
-  Pessoa* pes;
-  Pessoa* raiz = NULL;
-  //pes = new Pessoa("kleyson", 20);
-  string nome;
-  int idade;
-  int insere = 0;
-  int chave;
+    void atualizaValores(Pessoa* pessoa, bool opcao){
+       Pessoa* aux = pessoa;
+       Pessoa* auxPai = pessoa->papai;
+       bool segundoFilho;
+       if(auxPai->filhoEsquerda!=NULL && auxPai->filhoDireita!=NULL){
+         segundoFilho = true;
+       }else{
+         segundoFilho = false;
+       }
+       while(aux->papai != NULL){
+           if(auxPai->filhoEsquerda == aux){
+             if(opcao){
+               auxPai->esquerda++;
+             }else{
+               auxPai->esquerda--;
+             }
+           }else{
+             if(opcao){
+               auxPai->direita++;
+             }else{
+               auxPai->direita--;
+             }
+           }
+           if(segundoFilho){
+             return;
+           }
+           aux=aux->papai;
+           auxPai=aux->papai;
+       }
+   }
 
-  int id[5];
-  string nom[5];
-
-  while(insere < 6){
-    cout << "Informe o nome:" << endl;
-    cin >> nome;
-    cout << "Informe a idade" << endl;
-    cin >> idade;
-
-    pes = new Pessoa(nome, idade);
-
-    if(raiz == NULL){
-      cout << "Sou NULL" << endl;
-      raiz = pes;
-    }else{
-      raiz->inserirPessoa(pes);
-    }
-
-    insere++;
-  }
-
-  cout << endl << "preMostrar" << endl;
-  raiz->preMostrar();
-
-  // cout << endl << "ordemMostrar" << endl;
-  // raiz->ordemMostrar();
-  //
-  // cout << endl << "posMostrar" << endl;
-  // raiz->posMostrar();
-
- // Pessoa* aux;
- //  insere = 0;
-/*  while(insere < 5){
-       cout << endl << "Informe a idade para deletar: ";
-       cin >> chave;
-
-      aux = raiz->buscar(chave);
-
-
-      if(aux != NULL){
-        cout << "Elemento adicionado ao Backup "<< aux->idade << " " << aux->nome << endl;
-
-        id[insere] = aux->idade;
-        nom[insere] = aux->nome;
-        insere++;
+   void verifica(Pessoa *inserido){
+      while(inserido->papai != NULL){
+          if(inserido->papai->direita - inserido->papai->esquerda > 1 || inserido->papai->direita - inserido->papai->esquerda < -1 ){
+            int teste = qualroatacao(inserido->papai);
+            break;
+          }else{
+            inserido = inserido->papai;
+          }
       }
+   }
 
-      raiz->deletarElemento(chave, &raiz);
-      raiz->preMostrar();
-  }
+   void qualroatacao(Pessoa *rodar){
+     // 1=rotacao direita  2=rotaçao esquerda   3=rotação dupla direita   4=rotação dupla esquerda
+     if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda < 0){
+       return 1;
+     }else{
+       if(roda->direita - roda->esquerda > 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda > 0){
+         return 2;
+       }else{
+         if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda > 0){
+           return 3;
+         }else{
+           return 4;
+         }
+       }
+     }
+   }
 
-  cout << endl << "Valores Armazenados" << endl << endl;
-  for (size_t i = 0; i < 5; i++) {
+   void rotacaoEsquerda(Pessoa *rodar, Pessoa **raiz){
+     if(rodar == (*raiz)){
+       if(rodar->filhoDireita->filhoEsquerda != NULL){
+        
+       }else{
 
-    cout << "Nome: " << nom[i] << endl;
-    cout << "Idade: " << id[i] << endl << endl;
-  }*/
+       }
+     }else{
+       if(rodar->filhoDireita->filhoEsquerda !=NULL){
 
-  return 0;
-}
+       }else{
+
+       }
+     }
+   }
+};
