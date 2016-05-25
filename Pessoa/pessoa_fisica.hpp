@@ -273,7 +273,6 @@ class Pessoa{
     }
 
     void ordemMostrar(){
-
       if(filhoEsquerda != NULL){
         this->filhoEsquerda->ordemMostrar();
       }
@@ -297,35 +296,36 @@ class Pessoa{
     }
 
     void atualizaValores(Pessoa* pessoa, bool opcao){
-       Pessoa* aux = pessoa;
-       Pessoa* auxPai = pessoa->papai;
-       bool segundoFilho;
-       if(auxPai->filhoEsquerda!=NULL && auxPai->filhoDireita!=NULL){
-         segundoFilho = true;
-       }else{
-         segundoFilho = false;
-       }
-       while(aux->papai != NULL){
-           if(auxPai->filhoEsquerda == aux){
-             if(opcao){
-               auxPai->esquerda++;
-             }else{
-               auxPai->esquerda--;
-             }
-           }else{
-             if(opcao){
-               auxPai->direita++;
-             }else{
-               auxPai->direita--;
-             }
-           }
-           if(segundoFilho){
-             return;
-           }
-           aux=aux->papai;
-           auxPai=aux->papai;
-       }
-   }
+          Pessoa* aux = pessoa;
+          Pessoa* auxPai = pessoa->papai;
+          bool segundoFilho;
+          if(auxPai->filhoEsquerda!=NULL && auxPai->filhoDireita!=NULL){
+            segundoFilho = true;
+          }else{
+            segundoFilho = false;
+          }
+          while(aux->papai != NULL){
+              if(auxPai->filhoEsquerda == aux){
+                if(opcao){
+                  auxPai->esquerda++;
+                }else{
+                  auxPai->esquerda--;
+                }
+              }else{
+                if(opcao){
+                  auxPai->direita++;
+                }else{
+                  auxPai->direita--;
+                }
+              }
+              if(segundoFilho){
+                return;
+              }
+              aux=aux->papai;
+              auxPai=aux->papai;
+          }
+      }
+
 
    void verifica(Pessoa *inserido){
       while(inserido->papai != NULL){
@@ -340,10 +340,10 @@ class Pessoa{
 
    void qualroatacao(Pessoa *rodar){
      // 1=rotacao direita  2=rotaçao esquerda   3=rotação dupla direita   4=rotação dupla esquerda
-     if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda < 0){
+     if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda <= 0){
        return 1;
      }else{
-       if(roda->direita - roda->esquerda > 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda > 0){
+       if(roda->direita - roda->esquerda > 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda >= 0){
          return 2;
        }else{
          if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda > 0){
@@ -358,7 +358,10 @@ class Pessoa{
    void rotacaoEsquerda(Pessoa *rodar, Pessoa **raiz){
      if(rodar == (*raiz)){
        if(rodar->filhoDireita->filhoEsquerda != NULL){
-        
+
+         /*rodar->filhoDireita->filhoEsquerda->papai = rodar;
+         rodar->filhoDireita = rodar->filhoDireita->filhoEsquerda;
+         rodar->filhoDireita->filhoEsquerda = rodar;*/
        }else{
 
        }
