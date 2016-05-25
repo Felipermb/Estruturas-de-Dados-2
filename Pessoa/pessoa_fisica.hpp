@@ -50,24 +50,24 @@ class Pessoa{
       return idade;
     };
 
-    void inserirPessoa(Pessoa *nova){
+    void inserirPessoa(Pessoa *nova, Pessoa **raiz){
         if(nova->idade <= this->idade){
           if(filhoEsquerda == NULL){
               this->filhoEsquerda = nova;
               nova->papai = this;
-              atualizaValores(nova,true);
-              verifica(nova);
+              (*raiz)->profundidadeNos();
+              (*raiz)->verifica(raiz);
           }else{
-              filhoEsquerda->inserirPessoa(nova);
+              filhoEsquerda->inserirPessoa(nova,raiz);
           }
         }else{
           if(filhoDireita == NULL){
               this->filhoDireita = nova;
               nova->papai = this;
-              atualizaValores(nova,true);
-              verifica(nova);
+              (*raiz)->profundidadeNos();
+              (*raiz)->verifica(raiz);
           }else{
-              filhoDireita->inserirPessoa(nova);
+              filhoDireita->inserirPessoa(nova,raiz);
           }
         }
 
@@ -223,6 +223,8 @@ class Pessoa{
                    }
           }
         }
+        (*raiz)->profundidadeNos();
+        (*raiz)->verifica(raiz);
       }else{
         //pessoa não encontrada
         cout << "Pessoa Não Encontrada" << endl;
@@ -233,14 +235,12 @@ class Pessoa{
     Pessoa* buscar(int chave){
       if(chave != this->idade){
         if(chave < this->idade){
-          //esquerda
           if(filhoEsquerda!=NULL){
             this->filhoEsquerda->buscar(chave);
           }else{
             return NULL;
           }
         }else{
-          //direita
           if(filhoDireita != NULL){
             this->filhoDireita->buscar(chave);
           }else{
@@ -262,7 +262,7 @@ class Pessoa{
     }
 
     void preMostrar(){
-        cout << this->nome << ": " << this->idade << ": " << this->direita << ": "<< this->esquerda  << ": " << this->direita - this->esquerda << endl;
+        cout << this->nome << ": " << this->idade << "  Desbalanceamento:  " << this->direita - this->esquerda << endl;
         if(filhoEsquerda != NULL){
           this->filhoEsquerda->preMostrar();
         }
@@ -295,91 +295,117 @@ class Pessoa{
       cout << this->nome << ":" << this->idade << endl;
     }
 
-    void atualizaValores(Pessoa* pessoa, bool opcao){
-          Pessoa* aux = pessoa;
-          Pessoa* auxPai = pessoa->papai;
-          bool segundoFilho;
-          if(auxPai->filhoEsquerda!=NULL && auxPai->filhoDireita!=NULL){
-            segundoFilho = true;
-          }else{
-            segundoFilho = false;
-          }
-          while(aux->papai != NULL){
-              if(auxPai->filhoEsquerda == aux){
-                if(opcao){
-                  auxPai->esquerda++;
-                }else{
-                  auxPai->esquerda--;
-                }
-              }else{
-                if(opcao){
-                  auxPai->direita++;
-                }else{
-                  auxPai->direita--;
-                }
-              }
-              if(segundoFilho){
-                return;
-              }
-              aux=aux->papai;
-              auxPai=aux->papai;
-          }
-      }
-
-
-   void verifica(Pessoa *inserido){
-      while(inserido->papai != NULL){
-          if(inserido->papai->direita - inserido->papai->esquerda > 1 || inserido->papai->direita - inserido->papai->esquerda < -1 ){
-            int teste = qualrotacao(inserido->papai);
-            break;
-          }else{
-            inserido = inserido->papai;
-          }
-      }
-   }
-
-   int qualrotacao(Pessoa *roda){
-     // 1=rotacao direita  2=rotaçao esquerda   3=rotação dupla direita   4=rotação dupla esquerda
-     if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda <= 0){
-       return 1;
-     }else{
-       if(roda->direita - roda->esquerda > 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda >= 0){
-         return 2;
-       }else{
-         if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda > 0){
-           return 3;
-         }else{
-           return 4;
-         }
-       }
-     }
-   }
-
-   void rotacaoEsquerda(Pessoa *rodar, Pessoa **raiz){
-     if(rodar == (*raiz)){
-        (*raiz) = rodar->filhoDireita;
-        rodar->filhoDireita = (*raiz)->filhoEsquerda;
-        (*raiz)->filhoEsquerda = rodar;
-        (*raiz)->papai = NULL;
-        rodar->papai = (*raiz);
-        if(rodar->filhoDireita != NULL){
-          rodar->filhoDireita->papai = rodar;
+  int profundidadeNos(){
+        esquerda = 0;
+        direita = 0;
+        //cout<< "profundidadeNos " << endl;
+        if (filhoEsquerda != NULL) {
+            esquerda = filhoEsquerda->profundidadeNos()+1;
         }
-     }else{
-       Pessoa* pai = rodar->papai;
-       Pessoa* aux = rodar->filhoDireita;;
-       if(pai->filhoEsquerda == rodar){
-         pai->filhoEsquerda = aux;
-       }else{
-         pai->filhoDireita = aux;
-       }
-       aux->papai = pai;
-       rodar->filhoDireita = aux->filhoEsquerda;
-       aux->filhoEsquerda = rodar;
-       rodar->papai = aux;
-       if(rodar->filhoDireita != NULL){
-         rodar->filhoDireita->papai = rodar;
-     }
-   }
-  }
+
+        if (filhoDireita != NULL) {
+            direita = filhoDireita->profundidadeNos()+1;
+        }
+
+        return (esquerda > direita) ? esquerda : direita;
+    }
+
+  void verifica(Pessoa** raiz){
+        int teste = this->direita - this->esquerda;
+        if(teste < -1 || teste > 1){
+          cout << "Árvore Desbalanceada em: " << this->idade << endl;
+          Balancear(teste, this, raiz);
+          return;
+        }
+        if(filhoEsquerda != NULL){
+          this->filhoEsquerda->verifica(raiz);
+        }
+        if(filhoDireita != NULL){
+          this->filhoDireita->verifica(raiz);
+        }
+    }
+
+  void Balancear(int teste, Pessoa *pessoa, Pessoa** raiz){
+      int teste_no;
+      if(teste < 0){
+        teste_no = pessoa->filhoEsquerda->direita - pessoa->filhoEsquerda->esquerda;
+        if(teste_no <= 0){
+          cout << "Rotação direita" << endl;
+          rotacaoDireita(pessoa, raiz);
+        }else{
+          cout << "Dupla direita" << endl;
+          rotacaoEsquerda(pessoa->filhoEsquerda, raiz);
+          rotacaoDireita(pessoa, raiz);
+        }
+      }else{
+        teste_no = pessoa->filhoDireita->direita - pessoa->filhoDireita->esquerda;
+        if(teste_no >= 0){
+          cout << "Rotação esquerda" << endl;
+          rotacaoEsquerda(pessoa, raiz);
+        }else{
+          cout << "Dupla esquerda" << endl;
+          rotacaoDireita(pessoa->filhoDireita, raiz);
+          rotacaoEsquerda(pessoa, raiz);
+        }
+      }
+      (*raiz)->profundidadeNos();
+    }
+
+  void rotacaoDireita(Pessoa* pessoa, Pessoa** raiz){
+      if(pessoa->papai == NULL){
+        (*raiz) = pessoa->filhoEsquerda;
+        pessoa->filhoEsquerda = (*raiz)->filhoDireita;
+        (*raiz)->filhoDireita = pessoa;
+        (*raiz)->papai = NULL;
+        pessoa->papai = (*raiz);
+        if(pessoa->filhoEsquerda != NULL){
+          pessoa->filhoEsquerda->papai = pessoa;
+        }
+      }else{
+        Pessoa* pai = pessoa->papai;
+        Pessoa* aux = pessoa->filhoEsquerda;
+        if(pai->filhoEsquerda == pessoa){
+          pai->filhoEsquerda = aux;
+        }else{
+          pai->filhoDireita = aux;
+        }
+        aux->papai = pai;
+        pessoa->filhoEsquerda = aux->filhoDireita;
+        aux->filhoDireita = pessoa;
+        pessoa->papai = aux;
+        if(pessoa->filhoEsquerda != NULL){
+          pessoa->filhoEsquerda->papai = pessoa;
+        }
+
+      }
+    }
+
+  void rotacaoEsquerda(Pessoa* pessoa, Pessoa** raiz){
+      if(pessoa->papai == NULL){
+        (*raiz) = pessoa->filhoDireita;
+        pessoa->filhoDireita = (*raiz)->filhoEsquerda;
+        (*raiz)->filhoEsquerda = pessoa;
+        (*raiz)->papai = NULL;
+        pessoa->papai = (*raiz);
+        if(pessoa->filhoDireita != NULL){
+          pessoa->filhoDireita->papai = pessoa;
+        }
+      }else{
+        Pessoa* pai = pessoa->papai;
+        Pessoa* aux = pessoa->filhoDireita;;
+        if(pai->filhoEsquerda == pessoa){
+          pai->filhoEsquerda = aux;
+        }else{
+          pai->filhoDireita = aux;
+        }
+        aux->papai = pai;
+        pessoa->filhoDireita = aux->filhoEsquerda;
+        aux->filhoEsquerda = pessoa;
+        pessoa->papai = aux;
+        if(pessoa->filhoDireita != NULL){
+          pessoa->filhoDireita->papai = pessoa;
+        }
+      }
+    }
+
 };
