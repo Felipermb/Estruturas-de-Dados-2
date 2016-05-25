@@ -330,7 +330,7 @@ class Pessoa{
    void verifica(Pessoa *inserido){
       while(inserido->papai != NULL){
           if(inserido->papai->direita - inserido->papai->esquerda > 1 || inserido->papai->direita - inserido->papai->esquerda < -1 ){
-            int teste = qualroatacao(inserido->papai);
+            int teste = qualrotacao(inserido->papai);
             break;
           }else{
             inserido = inserido->papai;
@@ -338,7 +338,7 @@ class Pessoa{
       }
    }
 
-   void qualroatacao(Pessoa *rodar){
+   int qualrotacao(Pessoa *roda){
      // 1=rotacao direita  2=rotaçao esquerda   3=rotação dupla direita   4=rotação dupla esquerda
      if(roda->direita - roda->esquerda < 0 && roda->filhoEsquerda->direita - roda->filhoEsquerda->esquerda <= 0){
        return 1;
@@ -377,8 +377,9 @@ class Pessoa{
        rodar->filhoDireita = aux->filhoEsquerda;
        aux->filhoEsquerda = rodar;
        rodar->papai = aux;
-       if(pessoa->filhoDireita != NULL){
-         rodar->filhoDireita->papai = roda;
+       if(rodar->filhoDireita != NULL){
+         rodar->filhoDireita->papai = rodar;
      }
    }
+  }
 };
