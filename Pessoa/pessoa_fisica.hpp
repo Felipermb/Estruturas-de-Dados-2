@@ -357,20 +357,28 @@ class Pessoa{
 
    void rotacaoEsquerda(Pessoa *rodar, Pessoa **raiz){
      if(rodar == (*raiz)){
-       if(rodar->filhoDireita->filhoEsquerda != NULL){
-
-         /*rodar->filhoDireita->filhoEsquerda->papai = rodar;
-         rodar->filhoDireita = rodar->filhoDireita->filhoEsquerda;
-         rodar->filhoDireita->filhoEsquerda = rodar;*/
-       }else{
-
-       }
+        (*raiz) = rodar->filhoDireita;
+        rodar->filhoDireita = (*raiz)->filhoEsquerda;
+        (*raiz)->filhoEsquerda = rodar;
+        (*raiz)->papai = NULL;
+        rodar->papai = (*raiz);
+        if(rodar->filhoDireita != NULL){
+          rodar->filhoDireita->papai = rodar;
+        }
      }else{
-       if(rodar->filhoDireita->filhoEsquerda !=NULL){
-
+       Pessoa* pai = rodar->papai;
+       Pessoa* aux = rodar->filhoDireita;;
+       if(pai->filhoEsquerda == rodar){
+         pai->filhoEsquerda = aux;
        }else{
-
+         pai->filhoDireita = aux;
        }
+       aux->papai = pai;
+       rodar->filhoDireita = aux->filhoEsquerda;
+       aux->filhoEsquerda = rodar;
+       rodar->papai = aux;
+       if(pessoa->filhoDireita != NULL){
+         rodar->filhoDireita->papai = roda;
      }
    }
 };
