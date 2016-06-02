@@ -1,5 +1,6 @@
 #include "pessoa_fisica.hpp"
 #include <stdlib.h>
+#include "ordenacao.hpp"
 
 int main(int argc, char const *argv[]) {
   Pessoa* pes;
@@ -9,7 +10,16 @@ int main(int argc, char const *argv[]) {
   int idade;
   int insere = 0;
 
-  while(insere < 5){
+  Ordenacao vetor;
+  vetor.mostrar();
+  //vetor.bubbleSort();
+  //vetor.selectionSort();
+  vetor.insertSort();
+  cout << endl << "Ordenando..." << endl << endl;
+
+  vetor.mostrar();
+  cout << endl;
+/* while(insere < 5){
     cout << "Informe o nome:" << endl;
     cin >> nome;
     cout << "Informe a idade" << endl;
@@ -26,10 +36,10 @@ int main(int argc, char const *argv[]) {
     cout << endl;
     raiz->preMostrar();
     cout << endl;
-  }
+  }*/
 
-  cout << endl << "preMostrar" << endl;
-  raiz->preMostrar();
+//  cout << endl << "preMostrar" << endl;
+//  raiz->preMostrar();
 
   return 0;
 }
