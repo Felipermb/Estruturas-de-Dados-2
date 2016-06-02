@@ -55,8 +55,11 @@ class Ordenacao {
           if(vetor[i] > vetor[j]){
             int jt = j;
             int c = 0;
-            while(c <= count){
-              
+            for(c=0; c<=count; c++){
+              if(vetor[jt] < vetor[c]){
+                int aux = vetor[jt];
+                
+              }
             }
           }else{
             count++;
