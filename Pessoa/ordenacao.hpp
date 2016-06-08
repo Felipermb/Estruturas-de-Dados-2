@@ -1,5 +1,5 @@
 #include <iostream>
-#define MAX 10
+#define MAX 20
 using namespace std;
 
 class Ordenacao {
@@ -47,24 +47,43 @@ class Ordenacao {
       }
     }
 
-    void insertSort(){
-      int i,j;
-      int count = 0;
-      for(i=0; i<MAX; i++){
-        for(j=i+1; j<MAX; j++){
-          if(vetor[i] > vetor[j]){
-            int jt = j;
-            int c = 0;
-            while(c <= count){
-              
-            }
-          }else{
-            count++;
+    void insertionSort(){
+      int i, aux, cont;
+      for(i = 0; i < MAX; i++){
+          if(vetor[i] > vetor[i+1]){
+              aux = vetor[i+1];
+              vetor[i+1] = vetor[i];
+              vetor[i] = aux;
+              cont = i;
+              while(cont > 0){
+                  if(vetor[cont] < vetor[cont-1]){
+                      aux = vetor[cont-1];
+                      vetor[cont-1] = vetor[cont];
+                      vetor[cont] = aux;
+                  }else{
+                      break;
+                  }
+                  cont--;
+              }
           }
-        }
       }
     }
 
+    void shellSort(){
+      int j, aux;
+      int metade = MAX/2;
+      while(metade > 0){
+        for(j = 0; j < MAX-metade; j++){
+
+          if(vetor[j] > vetor[j+metade]){
+            aux = vetor[j];
+            vetor[j] = vetor[j+metade];
+            vetor[j+metade] = aux;
+          }
+        }
+        metade--;
+      }
+    }
 
     void mostrar(){
       int i;
