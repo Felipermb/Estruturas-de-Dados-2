@@ -14,7 +14,8 @@ int main(int argc, char const *argv[]) {
   vetor.mostrar();
   //vetor.bubbleSort();
   //vetor.selectionSort();
-  vetor.shellSort();
+  //vetor.shellSort();
+  vetor.margeSort(0,MAX-1);
   cout << endl << "Ordenando..." << endl << endl;
 
   vetor.mostrar();

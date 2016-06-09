@@ -1,5 +1,5 @@
 #include <iostream>
-#define MAX 20
+#define MAX 5
 using namespace std;
 
 class Ordenacao {
@@ -71,7 +71,7 @@ class Ordenacao {
 
     void shellSort(){
       int j, aux;
-      int metade = MAX/2;
+      int metade = MAX/2 + 1;
       while(metade > 0){
         for(j = 0; j < MAX-metade; j++){
 
@@ -82,6 +82,22 @@ class Ordenacao {
           }
         }
         metade--;
+      }
+    }
+
+    void margeSort(int inicio, int fim){
+
+      if(inicio != fim){
+        int metade = (inicio+fim)/2;
+        margeSort(inicio, metade);
+        margeSort(metade+1, fim);
+
+        int i = inicio;
+        int j = fim+1;
+
+        while(j>inicio){
+          
+        }
       }
     }
 
