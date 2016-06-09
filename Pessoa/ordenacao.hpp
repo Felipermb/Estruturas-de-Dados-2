@@ -1,5 +1,5 @@
 #include <iostream>
-#define MAX 5
+#define MAX 4
 using namespace std;
 
 class Ordenacao {
@@ -93,10 +93,15 @@ class Ordenacao {
         margeSort(metade+1, fim);
 
         int i = inicio;
-        int j = fim+1;
-
-        while(j>inicio){
-          
+        int j = fim;
+        int k = 0;
+        while(k < fim){
+          if(vetor[i] > vetor[j]){
+            int aux = vetor[i];
+            vetor[i] = vetor[j];
+            vetor[j] = aux;
+          }
+          k++;
         }
       }
     }
