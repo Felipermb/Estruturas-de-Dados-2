@@ -1,5 +1,5 @@
 #include <iostream>
-#define MAX 10
+#define MAX 30
 using namespace std;
 
 class Ordenacao {
@@ -47,27 +47,78 @@ class Ordenacao {
       }
     }
 
-    void insertSort(){
-      int i,j;
-      int count = 0;
-      for(i=0; i<MAX; i++){
-        for(j=i+1; j<MAX; j++){
-          if(vetor[i] > vetor[j]){
-            int jt = j;
-            int c = 0;
-            for(c=0; c<=count; c++){
-              if(vetor[jt] < vetor[c]){
-                int aux = vetor[jt];
-                
+    void insertionSort(){
+      int i, aux, cont;
+      for(i = 0; i < MAX; i++){
+          if(vetor[i] > vetor[i+1]){
+              aux = vetor[i+1];
+              vetor[i+1] = vetor[i];
+              vetor[i] = aux;
+              cont = i;
+              while(cont > 0){
+                  if(vetor[cont] < vetor[cont-1]){
+                      aux = vetor[cont-1];
+                      vetor[cont-1] = vetor[cont];
+                      vetor[cont] = aux;
+                  }else{
+                      break;
+                  }
+                  cont--;
               }
-            }
+          }
+      }
+    }
+
+    void shellSort(){
+      int j, aux;
+      int metade = MAX/2 + 1;
+      while(metade > 0){
+        for(j = 0; j < MAX-metade; j++){
+
+          if(vetor[j] > vetor[j+metade]){
+            aux = vetor[j];
+            vetor[j] = vetor[j+metade];
+            vetor[j+metade] = aux;
+
+          }
+        }
+        metade--;
+      }
+    }
+
+    void quickSort(int esquerda,int direita){
+      if(esquerda < direita){
+        int pivot = particao(esquerda,direita);
+        quickSort(esquerda, pivot-1);
+        quickSort(pivot+1, direita);
+      }
+    }
+
+    int particao(int esquerda,int direita){
+      int i;
+      int pivo = vetor[esquerda];
+      while(esquerda != direita){
+        if(pivo == vetor[esquerda]){
+          if(pivo > vetor[direita]){
+            vetor[esquerda] = vetor[direita];
+            vetor[direita] = pivo;
           }else{
-            count++;
+            direita--;
+          }
+        }else{
+          if(pivo < vetor[esquerda]){
+            vetor[direita] = vetor[esquerda];
+            vetor[esquerda] = pivo;
+          }else{
+            esquerda++;
           }
         }
       }
     }
 
+    void mergeSort(){
+
+    }
 
     void mostrar(){
       int i;
