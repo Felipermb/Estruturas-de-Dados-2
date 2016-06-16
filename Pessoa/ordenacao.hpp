@@ -1,5 +1,5 @@
 #include <iostream>
-#define MAX 30
+#define MAX 9
 using namespace std;
 
 class Ordenacao {
@@ -114,9 +114,53 @@ class Ordenacao {
           }
         }
       }
+      return esquerda;
     }
 
-    void mergeSort(){
+    int mergeSort(int esquerda, int direita){
+      int i,j,k,metade = (esquerda+direita)/2;
+
+      if(esquerda == direita) return 0;
+
+      mergeSort(esquerda, metade);
+      mergeSort(metade+1,direita);
+
+      i = esquerda;
+      j = metade+1;
+      k = 0;
+
+      int *temp = new int[direita - esquerda+1];
+
+      while(i < metade + 1 || j  < direita + 1) {
+        if (i == metade + 1 ) { // i passou do final da primeira metade, pegar v[j]
+            temp[k] = vetor[j];
+            j++;
+            k++;
+        }
+        else {
+            if (j == direita + 1) { // j passou do final da segunda metade, pegar v[i]
+                temp[k] = vetor[i];
+                i++;
+                k++;
+            }
+            else {
+                if (vetor[i] < vetor[j]) {
+                    temp[k] = vetor[i];
+                    i++;
+                    k++;
+                }
+                else {
+                    temp[k] = vetor[j];
+                    j++;
+                    k++;
+                }
+            }
+        }
+      }
+      for(i = esquerda; i <= direita; i++) {
+        vetor[i] = temp[i - esquerda];
+      }
+      delete [] temp;
 
     }
 

@@ -15,8 +15,8 @@ int main(int argc, char const *argv[]) {
   //vetor.bubbleSort();
   //vetor.selectionSort();
   //vetor.shellSort();
-  vetor.quickSort(0,MAX-1);
-
+  //vetor.quickSort(0,MAX-1);
+  vetor.mergeSort(0,MAX-1);
   cout << endl << "Ordenando..." << endl << endl;
 
   vetor.mostrar();
